@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sweet Tea - ระบบจองคิว</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    body {
+      background: #f5f0e6; /* ครีมขาว */
+      color: #3b2f23;
+      line-height: 1.6;
+      padding: 20px;
+      max-width: 520px;
+      margin: 0 auto;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+      padding: 30px 20px;
+      background: #e2d5c0; /* เบจอ่อน */
+      color: #5c4033;
+      border-radius: 16px;
+    }
+    h1 { font-size: 1.5rem; margin-bottom: 5px; color: #5c4033; letter-spacing: 1px; }
+    h2 { font-size: 1.1rem; margin: 25px 0 12px; color: #5c4033; display: flex; align-items: center; gap: 8px; }
+
+    /* ปุ่มเลือกเมนู */
+    .menu-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+    .menu-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 22px;
+      border-radius: 12px;
+      border: 2px solid #e2d5c0;
+      background: #fff;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 1.1rem;
+      color: #5c4033;
+    }
+    .menu-btn .icon { font-size: 1.8rem; margin-bottom: 6px; }
+    .menu-btn.selected {
+      background: #8b5a2b; /* น้ำตาลเข้ม */
+      color: #fff;
+      border-color: #8b5a2b;
+    }
+
+    /* ปุ่มเลือกเวลา 2 คอลัมน์ */
+    .time-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 10px;
+    }
+    .time-btn {
+      padding: 14px 10px;
+      border-radius: 10px;
+      border: 2px solid #e2d5c0;
+      background: #fff;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      color: #5c4033;
+    }
+    .time-btn.selected {
+      background: #b58863; /* น้ำตาลอ่อน */
+      border-color: #b58863;
+      color: #fff;
+      font-weight: 500;
+    }
+
+    input[type="date"],
+    input[type="text"],
+    input[type="tel"] {
+      width: 100%;
+      padding: 14px 16px;
+      margin-top: 6px;
+      margin-bottom: 8px;
+      border: 1px solid #d4c4b0;
+      border-radius: 10px;
+      font-size: 1rem;
+      background: #fff;
+      color: #5c4033;
+    }
+    input::placeholder { color: #b5a795; }
+
+    .submit-btn {
+      width: 100%;
+      padding: 16px;
+      margin-top: 24px;
+      background: #8b5a2b;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 1.1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    .submit-btn:hover { background: #6f4722; }
+
+    /* กล่องเสร็จสิ้น */
+    .success-box {
+      display: none;
+      margin-top: 30px;
+      padding: 45px 25px;
+      background: #fff;
+      border: 2px solid #d4c4b0;
+      border-radius: 16px;
+      text-align: center;
+    }
+    .success-box h2 {
+      font-size: 2rem;
+      color: #8b5a2b;
+      margin-bottom: 15px;
+    }
+    .success-box p { font-size: 1rem; margin: 6px 0; color: #5c4033; }
+    .success-btn {
+      margin-top: 24px;
+      padding: 13px 32px;
+      background: #8b5a2b;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    .success-btn:hover { background: #6f4722; }
+    .show { display: block !important; }
+
+    .info-box {
+      margin-top: 30px;
+      padding: 24px;
+      background: #e2d5c0;
+      border-radius: 12px;
+      text-align: center;
+      color: #5c4033;
+    }
+
+    header h2 { color: #5c4033; margin-top: 15px; }
+    header p { color: #7a6b5a; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>💅 my nail</h1>
+  <p>เล็บเจล</p>
+  <h2>ระบบจองคิว</h2>
+  <p>จองคิวล่วงหน้า สะดวก รวดเร็ว ไม่ต้องรอนาน</p>
+</header>
+
+<form id="bookingForm">
+  <h2>💅 1. เลือกบริการ </h2>
+  <div class="menu-grid">
+    <div class="menu-btn" data-menu="ทาสีเจล">
+      <span class="icon">✨️</span> ทาสีเจล
+    </div>
+    <div class="menu-btn" data-menu="เพ้นท์เล็บ">
+      <span class="icon">🖌</span> เพ้นท์เล็บ
+    </div>
+    <div class="menu-btn" data-menu="ต่อเจล">
+      <span class="icon">✍️</span> ต่อเจล
+    </div>
+    <div class="menu-btn" data-menu="ถอดเจล/ถอดสี">
+      <span class="icon">💭</span> ถอดเจล/ถอดสี
+    </div>
+    <div class="menu-btn" data-menu="ปั้นนู้น">
+      <span class="icon">🌪</span> ปั้นนู้น
+    </div>
+  </div>
+
+  <h2>📅 2. เลือกวันที่</h2>
+  <input type="date" id="bookingDate" required>
+
+  <h2>🕐 3. เลือกเวลา</h2>
+  <div class="time-grid">
+    <button type="button" class="time-btn" data-time="08:00">08:00</button>
+    <button type="button" class="time-btn" data-time="10:00">10:00</button>
+    <button type="button" class="time-btn" data-time="12:00">12:00</button>
+    <button type="button" class="time-btn" data-time="14:00">14:00</button>
+    <button type="button" class="time-btn" data-time="16:00">16:00</button>
+    <button type="button" class="time-btn" data-time="18:00">18:00</button>
+    <button type="button" class="time-btn" data-time="20:00">20:00</button>
+    <button type="button" class="time-btn" data-time="22:00">22:00</button>
+  </div>
+  <input type="hidden" id="selectedTime" required>
+
+  <h2>👤 4. ข้อมูลผู้จอง</h2>
+  <input type="text" id="name" placeholder="ชื่อ" required>
+  <input type="tel" id="phone" placeholder="เบอร์โทรศัพท์ " required>
+
+  <button type="submit" class="submit-btn">✅ ยืนยันการจอง</button>
+</form>
+
+<div class="success-box" id="successMessage">
+  <h2>✅ เสร็จสิ้น</h2>
+  <p>จองคิวเรียบร้อยแล้วครับ</p>
+  <p id="confirmDetails"></p>
+  <button class="success-btn" onclick="location.reload()">จองใหม่</button>
+</div>
+
+<div class="info-box">
+  <p>☎️ <strong>โทรปรึกษาฟรี</strong></p>
+  <p>08x-xxx-xxxx</p>
+  <br>
+  <p>💬 <strong>ทักไลน์ปรึกษาฟรี</strong></p>
+  <p>@sweettea</p>
+</div>
+
+<script>
+  let selectedMenus = [];
+  let selectedTime = '';
+
+  document.querySelectorAll('.menu-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const menu = btn.dataset.menu;
+      if (btn.classList.contains('selected')) {
+        btn.classList.remove('selected');
+        selectedMenus = selectedMenus.filter(m => m !== menu);
+      } else {
+        btn.classList.add('selected');
+        selectedMenus.push(menu);
+      }
+    });
+  });
+
+  document.querySelectorAll('.time-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      selectedTime = btn.dataset.time;
+      document.getElementById('selectedTime').value = selectedTime;
+    });
+  });
+
+  document.getElementById('bookingForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    if (selectedMenus.length === 0) {
+      alert('กรุณาเลือกเมนูอย่างน้อย 1 รายการ 🧋');
+      return;
+    }
+    if (!selectedTime) {
+      alert('กรุณาเลือกเวลา 🕐');
+      return;
+    }
+
+    const date = document.getElementById('bookingDate').value;
+    const name = document.getElementById('name').value;
+
+    document.getElementById('confirmDetails').innerHTML =
+      `ชื่อ: ${name}<br>วันที่: ${date}<br>เวลา: ${selectedTime}<br>เมนู: ${selectedMenus.join(', ')}`;
+
+    document.getElementById('bookingForm').style.display = 'none';
+    document.getElementById('successMessage').classList.add('show');
+  });
+</script>
+
+</body>
+</html>
